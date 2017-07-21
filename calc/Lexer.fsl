@@ -1,0 +1,21 @@
+{
+
+module lexer
+open Microsoft.FSharp.Text.Lexing
+open Parser
+let lexeme = LexBuffer.LexemeString
+let inline charToInt c = int c - int '0'
+}
+rule token = parse 
+[' ' '\t' '\r' '\n'] {token lexbuf}
+|'+' {PLUS}
+|'-' {MINUS}
+|'*' {TIMES}
+|'/' {DIVIDE}
+|'=' {ASSIGN}
+|',' {SEQUENCE}
+|['0'-'9'] {INT (int (lexeme lexbuf)) }
+|'$'['0'-'9'] {VAR(charToInt((lexbuf.LexemeChar 1)))}
+|eof {EOF}
+
+

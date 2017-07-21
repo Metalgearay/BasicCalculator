@@ -1,0 +1,28 @@
+%{
+
+open ast
+%}
+
+%token PLUS MINUS TIMES DIVIDE EOF ASSIGN SEQUENCE
+%token <int> INT
+%token <int> VAR
+%left SEQUENCE
+%right ASSIGN
+%left PLUS MINUS
+%left TIMES DIVIDE
+
+%start Expr
+
+%type <ast.Expr> Expr
+
+%%
+
+Expr:
+Expr PLUS Expr {Binop($1, Add,$3)}
+|Expr MINUS Expr {Binop($1, Sub,$3)}
+|Expr TIMES Expr {Binop($1, Mul,$3)}
+|Expr DIVIDE Expr {Binop($1, Div,$3)}
+|Expr SEQUENCE Expr {Seq($1,$3)}
+|INT {Int($1)}
+|VAR {Var($1)}
+|VAR ASSIGN Expr {Asn($1,$3)}
